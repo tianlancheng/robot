@@ -22,10 +22,19 @@ export async function getHosts() {
   return request(`/api/host?username=${Store.get('USER_NAME')}`);
 }
 
-// 获取主机信息
+// 获取单个主机信息
 export async function getHost(id) {
   // return request(`/logapi/_cat/indices?pretty${stringify(params)}`);
   return request(`/api/host/${id}`);
+}
+
+// 编辑主机信息
+export async function editHost(params) {
+  // return request(`/logapi/_cat/indices?pretty${stringify(params)}`);
+  return request('/api/host', {
+    method: 'PUT',
+    body: params,
+  });
 }
 
 // 删除主机信息

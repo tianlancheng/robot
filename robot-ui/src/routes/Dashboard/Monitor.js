@@ -8,9 +8,13 @@ import {
   Row,
   Col,
   Icon,
+  Input,
+  Modal,
 } from 'antd';
 
 import styles from './Monitor.less';
+
+const { Search } = Input;
 
 @connect(({ monitor, loading }) => ({
   monitor,
@@ -21,6 +25,9 @@ export default class Monitor extends Component {
     super(props);
     this.state = {
       hosts: {},
+      visible: false,
+      eidtId: null,
+      remarks: null,
     };
   }
 
@@ -64,12 +71,45 @@ export default class Monitor extends Component {
     });
   }
 
+  editHost = (id, remarks) => {
+    this.setState({
+      visible: true,
+      eidtId: id,
+      remarks,
+    });
+  }
+
   details = (id) => {
     this.props.dispatch(routerRedux.push('/dashboard/container', { 'hostid': id }));
   }
 
+  handleOk = () => {
+    if (this.state.input) {
+      this.props.dispatch({
+        type: 'monitor/editHost',
+        params: {
+          id: this.state.eidtId,
+          remarks: this.state.input,
+        },
+      });
+    }
+    this.setState({
+      visible: false,
+    });
+  }
+
+  handleCancel = () => {
+    this.setState({
+      visible: false,
+    });
+  }
+
+  handelChange = (e) => {
+    this.state.input = e.target.value;
+  }
+
   render() {
-    const { hosts } = this.state;
+    const { hosts, remarks } = this.state;
     const { loading } = this.props;
     return (
       <div className={styles.cardList}>
@@ -86,6 +126,7 @@ export default class Monitor extends Component {
                 actions={[item.isMonitor ?
                   <a onClick={(ev) => { this.deleteMonitor(item._id); }}>取消监视</a>
                   : <a onClick={(ev) => { this.addMonitor(item._id); }}>加入监视</a>,
+                  <a onClick={(ev) => { this.editHost(item._id, item.remarks); }}>编辑备注</a>,
                   <a onClick={(ev) => { this.deleteHost(item._id); }}>删除主机</a>]}
               >
                 <Card.Meta
@@ -102,11 +143,11 @@ export default class Monitor extends Component {
                     <div>
                       <Row>
                         <Col span={12}>cpu数：{item.cpu.count}</Col>
-                        <Col span={12}>使用率： {item.cpu.percent}</Col>
+                        <Col span={12}>使用率： {item.cpu.percent}%</Col>
                       </Row>
                       <Row>
-                        <Col span={12}>内存：{item.memory.total}</Col>
-                        <Col span={12}>使用率：{item.memory.percent}</Col>
+                        <Col span={12}>内存：{item.memory.total}G</Col>
+                        <Col span={12}>使用率：{item.memory.percent}%</Col>
                       </Row>
                       <Row>
                         <Col span={24}>容器数量：{item.containerNum}</Col>
@@ -114,10 +155,23 @@ export default class Monitor extends Component {
                     </div>
                   }
                 />
+                <div style={{ marginTop: 10 }}>
+                  备注：{item.remarks}
+                </div>
               </Card>
             </List.Item>
           )}
         />
+        <Modal
+          destroyOnClose
+          visible={this.state.visible}
+          title="编辑备注"
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          okText="确认"
+        >
+          <Input type="text" placeholder="备注信息" onChange={this.handelChange} defaultValue={remarks} />
+        </Modal>
       </div>
     );
   }

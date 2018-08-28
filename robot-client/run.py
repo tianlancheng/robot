@@ -83,7 +83,7 @@ def resource_monitor_thread(t, server):
             "percent": psutil.cpu_percent(interval=2)
           },
           "memory":{
-            "total": memory.total,
+            "total": round(memory.total/1000000000,2),
             "percent": memory.percent
           },
           "containers": containers

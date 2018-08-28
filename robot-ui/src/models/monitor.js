@@ -1,5 +1,5 @@
 import { routerRedux } from 'dva/router';
-import { getHosts, deleteHost, addMonitor, getMonitor, deleteMonitor } from '../services/api';
+import { editHost, getHosts, deleteHost, addMonitor, getMonitor, deleteMonitor } from '../services/api';
 
 export default {
   namespace: 'monitor',
@@ -15,6 +15,13 @@ export default {
       yield put({
         type: 'save',
         payload: res,
+      });
+    },
+
+    *editHost({ params }, { call, put }) {
+      const res = yield call(editHost, params);
+      yield put({
+        type: 'getHosts',
       });
     },
 

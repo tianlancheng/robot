@@ -18,8 +18,8 @@ app = Flask(__name__)
 app.config.from_object(config)
 CORS(app)
 app.config['UPLOAD_FOLDER'] = os.getcwd() + '/static/pic'
-# socketio = SocketIO(app, async_mode='gevent')
-socketio = SocketIO(app, async_mode=None)
+socketio = SocketIO(app, async_mode='gevent') #linux用此行
+# socketio = SocketIO(app, async_mode=None) #windows用此行
 mongo = PyMongo(app)
 
 def background_thread():
@@ -252,6 +252,14 @@ def get_hosts():
     data.append(host)
   return jsonify(status=200, msg='success', data=data), 200
 
+@app.route('/api/host',methods=['PUT'])
+def update_host():
+  data = json.loads(request.get_data());
+  id = data.get('id')
+  host_set = mongo.db.host_set
+  host_set.update({"_id":id},{"$set":{"remarks":data.get('remarks')}})
+  return jsonify(status=200, msg='success', data=None), 200
+
 @app.route('/api/host/<id>',methods=['GET'])
 def get_host(id):
   host_set = mongo.db.host_set
@@ -267,6 +275,8 @@ def get_host(id):
 
 @app.route('/api/host/<id>',methods=['DELETE'])
 def delete_host(id):
+  user_host_set = mongo.db.user_host_set
+  user_host_set.remove({'_ip':id})
   host_set = mongo.db.host_set
   host_set.remove({'_id':id})
   return jsonify(status=200, msg='success', data=id), 200
