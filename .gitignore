@@ -7,7 +7,7 @@
 /robot-ui_roadhog-api-doc
 
 # production
-/robot-ui/dist
+# /robot-ui/dist
 
 # misc
 /robot-ui/.DS_Store
