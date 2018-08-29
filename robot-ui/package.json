@@ -7,7 +7,7 @@
     "precommit": "npm run lint-staged",
     "start": "cross-env PORT=8888 roadhog dev",
     "start:no-proxy": "cross-env PORT=8888 NO_PROXY=true roadhog dev",
-    "build": "roadhog build",
+    "build": "cross-env roadhog build",
     "site": "roadhog-api-doc static && gh-pages -d dist",
     "analyze": "roadhog build --analyze",
     "lint:style": "stylelint \"src/**/*.less\" --syntax less",

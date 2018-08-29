@@ -5,7 +5,6 @@ import { Form, Input, Button, Icon } from 'antd';
 import Store from 'store';
 import Config from '../../common/config';
 import styles from './Login.less';
-import loginBg from '../../assets/login-bg.jpg';
 
 const FormItem = Form.Item;
 
@@ -63,7 +62,7 @@ export default class Login extends Component {
     return (
       <div className={styles['login-form']}>
         <div className={styles['login-logo']}>
-          <img alt="" src={loginBg} />
+          <img alt="" src="/static/headPic/login-bg.jpg" />
           <span>Ant Design</span>
         </div>
         <Form onSubmit={this.handleSubmit}>

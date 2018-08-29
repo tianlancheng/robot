@@ -1,8 +1,56 @@
 # react-antd-dva
 
-基于react + ant-design + dva + Mock 企业级后台管理系统最佳实践
+基于react + ant-design + dva + Mock 主机管理系统
 
-- 预览：http://dva.sosout.com/
+## 前端部署步骤
+
+1. 安装nginx: sudo apt-get install nginx
+
+2. 编译项目: npm run build 
+
+3. 将生成的dist文件夹放入 /usr/share/nginx/ 目录下
+
+4. 配置服务器
+进入/etc/nginx/sites-enabled，以管理员身份新建一个你的项目的配置文件，比如：robot-ui.conf，然后加入下面代码：
+```code
+server {
+        listen 8888;
+        # server_name your.domain.com;
+        root /usr/share/nginx/dist;
+        index index.html index.htm;
+  add_header Access-Control-Allow-Origin *;
+        add_header Access-Control-Allow-Headers Origin,X-Requested-Width,Content-Type,Accept;
+        location / {
+                try_files $uri $uri/ /index.html;
+        }
+  location /api/ {
+            proxy_pass http://localhost:5000/api/;
+        }
+  location /static/ {
+            proxy_pass http://localhost:5000/static/;
+        }
+  location  /socket {
+      proxy_pass http://localhost:5000/socket;
+      proxy_redirect    off;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header Host $host;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+        } 
+  location /logapi/ {
+            proxy_pass http://39.108.222.83:9200/;
+        }
+        location ^~ /assets/ {
+                gzip_static on;
+                expires max;
+                add_header Cache-Control public;
+        }
+        client_max_body_size 20M;
+        keepalive_timeout 10;
+}
+```
 
 ## 特性
 

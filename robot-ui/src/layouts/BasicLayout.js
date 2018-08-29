@@ -12,7 +12,6 @@ import Debounce from 'lodash-decorators/debounce';
 import Store from 'store';
 import Config from '../common/config';
 import styles from './BasicLayout.less';
-import headPic from '../assets/head.jpg';
 
 const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
@@ -276,7 +275,7 @@ class BasicLayout extends React.PureComponent {
           <Dropdown overlay={menu} placement="bottomCenter">
             <div className={styles['header-right']}>
               <div className={styles['user-name']}>
-                <Avatar size="small" className={styles.avatar} src={headPic} />
+                <Avatar size="small" className={styles.avatar} src={`/${currentUser.avatar}`} />
                 {currentUser.user_name}
               </div>
             </div>
