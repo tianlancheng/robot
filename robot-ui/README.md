@@ -10,15 +10,14 @@
 
 3. 将生成的dist文件夹放入 /usr/share/nginx/ 目录下
 
-4. 配置服务器
-进入/etc/nginx/sites-enabled，以管理员身份新建一个你的项目的配置文件，比如：robot-ui.conf，然后加入下面代码：
+4. 配置服务器: 进入/etc/nginx/sites-enabled，以管理员身份新建一个你的项目的配置文件，比如：robot-ui.conf，然后加入下面代码即可
 ```code
 server {
         listen 8888;
         # server_name your.domain.com;
         root /usr/share/nginx/dist;
         index index.html index.htm;
-  add_header Access-Control-Allow-Origin *;
+        add_header Access-Control-Allow-Origin *;
         add_header Access-Control-Allow-Headers Origin,X-Requested-Width,Content-Type,Accept;
         location / {
                 try_files $uri $uri/ /index.html;
