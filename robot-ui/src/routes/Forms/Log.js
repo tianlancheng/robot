@@ -10,7 +10,6 @@ import styles from './Log.less';
 export default class Log extends Component {
   constructor(props) {
     super(props);
-    console.log('log constructor');
     console.log(props);
     this.state = {
       index: 'logstash-2018.08.24',
@@ -19,15 +18,12 @@ export default class Log extends Component {
       current: 1,
     };
     if (props.history.location.state) {
-      this.state = {
-        index: props.history.location.state.index,
-      };
+      this.state.index = props.history.location.state.index;
+      this.getResult();
     }
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    this.getResult();
   }
 
   componentWillReceiveProps(nextProps) {

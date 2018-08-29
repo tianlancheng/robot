@@ -18,8 +18,7 @@ app = Flask(__name__)
 app.config.from_object(config)
 CORS(app)
 app.config['UPLOAD_FOLDER'] = os.getcwd() + '/static/pic'
-socketio = SocketIO(app, async_mode='gevent') #linux用此行
-# socketio = SocketIO(app, async_mode=None) #windows用此行
+socketio = SocketIO(app, async_mode=app.config['ASYNC_MODE'])
 mongo = PyMongo(app)
 
 def background_thread():

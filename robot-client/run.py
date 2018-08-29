@@ -71,7 +71,7 @@ def resource_monitor_thread(t, server):
           "name": item.name,
           "status": item.status,
           "image": item.image.tags,
-          "labels": item.labels
+          "labels": json.dumps(item.labels)
         }
         containers.append(container)
 
