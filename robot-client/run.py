@@ -7,6 +7,7 @@ import config
 from base import require_args,require_json
 import socket, requests
 import time,os,sys
+import threading
 
 app = Flask(__name__)
 
@@ -55,7 +56,6 @@ def adjustRobot():
 import psutil
 import socket
 import docker
-import threading
 from time import sleep
 def resource_monitor_thread(t, server):
   print('资源监控线程启动')
@@ -100,15 +100,16 @@ def picture_monitor_thread(t, server, order):
   print('图片监控线程启动')
   url = server+'/api/pic'
   while(True):
-    try:
-      rootdir = 'static/pic/'
-      filenames = os.listdir(rootdir) #列出文件夹下所有的目录与文件
-      for filename in filenames: 
-        path = os.path.join(rootdir,filename)
-        print(path)
-        if os.path.isfile(path):
-          files = {'file':open(path,'rb')}
-          requests.post(url, data = {'order':order}, headers={}, files = files)
+    # try:
+    rootdir = 'static/pic/'
+    filenames = os.listdir(rootdir) #列出文件夹下所有的目录与文件
+    for filename in filenames: 
+      path = os.path.join(rootdir,filename)
+      print(path)
+      if os.path.isfile(path):
+        files = {'file':open(path,'rb')}
+        requests.post(url, data = {'order':order}, headers={}, files = files)
+        os.remove(path);
         time.sleep(t)
     except Exception as e:
           print('pic send error', e)
@@ -119,8 +120,8 @@ if __name__ == '__main__':
   if len(sys.argv) > 1:
     start(sys.argv[1])
   print('服务器地址：'+app.config['SERVER'])
-  t1=threading.Thread(target=resource_monitor_thread,args=(3, app.config['SERVER']))
-  t1.start()
-  t2=threading.Thread(target=picture_monitor_thread,args=(4, app.config['SERVER'], order))
+  # t1=threading.Thread(target=resource_monitor_thread,args=(3, app.config['SERVER']))
+  # t1.start()
+  t2=threading.Thread(target=picture_monitor_thread,args=(1, app.config['SERVER'], order))
   t2.start()
   app.run(host='0.0.0.0',port=app.config['AGENT_PROT'],debug=False,threaded=True)
