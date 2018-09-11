@@ -120,8 +120,10 @@ if __name__ == '__main__':
   if len(sys.argv) > 1:
     start(sys.argv[1])
   print('服务器地址：'+app.config['SERVER'])
-  # t1=threading.Thread(target=resource_monitor_thread,args=(3, app.config['SERVER']))
-  # t1.start()
+  t1=threading.Thread(target=resource_monitor_thread,args=(3, app.config['SERVER']))
+  t1.setDaemon(True)
+  t1.start()
   t2=threading.Thread(target=picture_monitor_thread,args=(1, app.config['SERVER'], order))
+  t2.setDaemon(True)
   t2.start()
   app.run(host='0.0.0.0',port=app.config['AGENT_PROT'],debug=False,threaded=True)
